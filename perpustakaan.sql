@@ -2,10 +2,10 @@
 -- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 28, 2019 at 06:08 AM
+-- Host: localhost
+-- Generation Time: Apr 29, 2019 at 04:01 AM
 -- Server version: 10.1.38-MariaDB
--- PHP Version: 7.1.27
+-- PHP Version: 7.3.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -29,11 +29,37 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admin` (
+  `id` varchar(8) NOT NULL,
   `nama` varchar(50) NOT NULL,
-  `kode` int(10) NOT NULL,
-  `password` varchar(15) NOT NULL,
-  `id` varchar(8) NOT NULL
+  `email` varchar(35) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `nama`, `email`) VALUES
+('20180001', 'Budi', 'budi@perpus.itera.ac.id');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `akun`
+--
+
+CREATE TABLE `akun` (
+  `id` varchar(8) NOT NULL,
+  `pass` varchar(25) NOT NULL,
+  `kode` varchar(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `akun`
+--
+
+INSERT INTO `akun` (`id`, `pass`, `kode`) VALUES
+('14117003', '123', '2'),
+('20180001', '123', '1');
 
 -- --------------------------------------------------------
 
@@ -59,12 +85,18 @@ CREATE TABLE `buku` (
 --
 
 CREATE TABLE `member` (
+  `id` varchar(8) DEFAULT NULL,
   `nama` varchar(50) NOT NULL,
-  `prodi` varchar(30) NOT NULL,
-  `kode` int(10) NOT NULL,
-  `password` varchar(15) NOT NULL,
-  `id` varchar(8) NOT NULL
+  `prodi` varchar(20) DEFAULT NULL,
+  `email` varchar(35) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `member`
+--
+
+INSERT INTO `member` (`id`, `nama`, `prodi`, `email`) VALUES
+('14117003', 'M Iqbal Revantama', 'Teknik Informatika', 'kykylizaro98@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -74,8 +106,9 @@ CREATE TABLE `member` (
 
 CREATE TABLE `peminjaman` (
   `no_peminjaman` int(5) NOT NULL,
-  `tanggal_pinjam` varchar(20) NOT NULL,
-  `tanggal_kembali` varchar(20) NOT NULL,
+  `id` varchar(8) DEFAULT NULL,
+  `tanggal_pinjam` date NOT NULL,
+  `tanggal_kembali` date NOT NULL,
   `denda` int(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -87,6 +120,12 @@ CREATE TABLE `peminjaman` (
 -- Indexes for table `admin`
 --
 ALTER TABLE `admin`
+  ADD KEY `id` (`id`);
+
+--
+-- Indexes for table `akun`
+--
+ALTER TABLE `akun`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -99,13 +138,36 @@ ALTER TABLE `buku`
 -- Indexes for table `member`
 --
 ALTER TABLE `member`
-  ADD PRIMARY KEY (`id`);
+  ADD KEY `id` (`id`);
 
 --
 -- Indexes for table `peminjaman`
 --
 ALTER TABLE `peminjaman`
-  ADD PRIMARY KEY (`no_peminjaman`);
+  ADD PRIMARY KEY (`no_peminjaman`),
+  ADD KEY `id` (`id`);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `admin`
+--
+ALTER TABLE `admin`
+  ADD CONSTRAINT `admin_ibfk_1` FOREIGN KEY (`id`) REFERENCES `akun` (`id`);
+
+--
+-- Constraints for table `member`
+--
+ALTER TABLE `member`
+  ADD CONSTRAINT `member_ibfk_1` FOREIGN KEY (`id`) REFERENCES `akun` (`id`);
+
+--
+-- Constraints for table `peminjaman`
+--
+ALTER TABLE `peminjaman`
+  ADD CONSTRAINT `peminjaman_ibfk_1` FOREIGN KEY (`id`) REFERENCES `akun` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
